@@ -1,54 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Google Map Pin Locations</title>
+  <head>
+    <title>Office Locations</title>
+    <meta charset="utf-8" />
     <style>
-        #map {
-            height: 100%;
-            width: 100%;
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      #map { height: 100vh; width: 100%; }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
     <script>
-        function initMap() {
-            // สร้างแผนที่และกำหนดจุดกึ่งกลางเริ่มต้น
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 13,
-                center: { lat: 13.756331, lng: 100.501762 }
-            });
+      async function initMap() {
+        const response = await fetch("data.json"); // โหลด JSON จาก GitHub Pages
+        const locations = await response.json();
 
-            // ดึงข้อมูลจากไฟล์ data.json
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => {
-                    // สร้าง marker สำหรับแต่ละตำแหน่งในไฟล์ JSON
-                    data.forEach(location => {
-                        const marker = new google.maps.Marker({
-                            position: { lat: location.latitude, lng: location.longitude },
-                            map: map,
-                            title: location.name
-                        });
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: { lat: locations[0].Latitude, lng: locations[0].Longitude }
+        });
 
-                        // สร้างหน้าต่างข้อมูล (info window) เมื่อคลิกที่ marker
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `<h3>${location.name}</h3>`
-                        });
-
-                        marker.addListener('click', () => {
-                            infoWindow.open(map, marker);
-                        });
-                    });
-                })
-                .catch(error => console.error('Error loading data:', error));
-        }
+        locations.forEach(loc => {
+          new google.maps.Marker({
+            position: { lat: loc.Latitude, lng: loc.Longitude },
+            map,
+            title: loc.Name
+          });
+        });
+      }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap"></script>
-</body>
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap">
+    </script>
+  </body>
 </html>
