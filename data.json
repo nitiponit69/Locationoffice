@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Bangkok",
+    "lat": 13.7563,
+    "lng": 100.5018
+  },
+  {
+    "name": "Chiang Mai",
+    "lat": 18.7883,
+    "lng": 98.9853
+  },
+  {
+    "name": "Khon Kaen",
+    "lat": 16.4419,
+    "lng": 102.835
+  },
+  {
+    "name": "Surat Thani",
+    "lat": 9.1342,
+    "lng": 99.3335
+  }
+]
