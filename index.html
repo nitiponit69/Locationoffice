@@ -1,107 +1,79 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="th">
 <head>
-
-    <title>Google Map Pin Locations</title>
-
-    <style>
-
-        #map {
-
-            height: 100%;
-
-            width: 100%;
-
-        }
-
-        html, body {
-
-            height: 100%;
-
-            margin: 0;
-
-            padding: 0;
-
-        }
-
-    </style>
-
+  <meta charset="UTF-8">
+  <title>Office Locations Map</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+    .gm-style-iw {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
 </head>
-
 <body>
+  <div id="map"></div>
 
-    <div id="map"></div>
+  <script>
+    async function initMap() {
+      try {
+        // 👉 เปลี่ยน URL ให้ตรงกับ GitHub Pages ของคุณ
+        const response = await fetch("https://nitiponit69.github.io/Locationoffice/data.json");
+        if (!response.ok) throw new Error("โหลด data.json ไม่ได้");
+        
+        const locations = await response.json();
 
-    <script>
+        if (locations.length === 0) {
+          alert("ไม่มีข้อมูลใน data.json");
+          return;
+        }
 
-        function initMap() {
+        // กำหนดค่าเริ่มต้นจากจุดแรก
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: { lat: locations[0].Latitude, lng: locations[0].Longitude }
+        });
 
-            // สร้างแผนที่และกำหนดจุดกึ่งกลางเริ่มต้น
+        const bounds = new google.maps.LatLngBounds();
 
-            const map = new google.maps.Map(document.getElementById("map"), {
+        locations.forEach(loc => {
+          const marker = new google.maps.Marker({
+            position: { lat: loc.Latitude, lng: loc.Longitude },
+            map,
+            title: loc.Name
+          });
 
-                zoom: 13,
+          const info = new google.maps.InfoWindow({
+            content: `<b>${loc.Name}</b><br>ที่อยู่: ${loc.Address || "-"}`
+          });
 
-                center: { lat: 13.756331, lng: 100.501762 }
+          marker.addListener("click", () => {
+            info.open(map, marker);
+          });
 
-            });
+          bounds.extend(marker.position);
+        });
 
+        // ปรับ map ให้พอดีกับ marker ทั้งหมด
+        map.fitBounds(bounds);
 
+      } catch (err) {
+        console.error(err);
+        document.body.innerHTML = "<h2 style='color:red;text-align:center;'>❌ โหลดแผนที่ไม่ได้ ตรวจสอบ data.json หรือ API Key</h2>";
+      }
+    }
+  </script>
 
-            // ดึงข้อมูลจากไฟล์ data.json
-
-            fetch('data.json')
-
-                .then(response => response.json())
-
-                .then(data => {
-
-                    // สร้าง marker สำหรับแต่ละตำแหน่งในไฟล์ JSON
-
-                    data.forEach(location => {
-
-                        const marker = new google.maps.Marker({
-
-                            position: { lat: location.latitude, lng: location.longitude },
-
-                            map: map,
-
-                            title: location.name
-
-                        });
-
-
-
-                        // สร้างหน้าต่างข้อมูล (info window) เมื่อคลิกที่ marker
-
-                        const infoWindow = new google.maps.InfoWindow({
-
-                            content: `<h3>${location.name}</h3>`
-
-                        });
-
-
-
-                        marker.addListener('click', () => {
-
-                            infoWindow.open(map, marker);
-
-                        });
-
-                    });
-
-                })
-
-                .catch(error => console.error('Error loading data:', error));
-
-        }
-
-    </script>
-
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap"></script>
-
+  <!-- 👉 เปลี่ยนเป็น API Key ของคุณเอง -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap"></script>
 </body>
-
 </html>
