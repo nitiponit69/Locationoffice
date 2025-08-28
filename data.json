@@ -1,22 +1,22 @@
 [
   {
-    "name": "Bangkok",
-    "lat": 13.7563,
-    "lng": 100.5018
+    "name": "สำนักงานใหญ่",
+    "latitude": 13.736717,
+    "longitude": 100.523186
   },
   {
-    "name": "Chiang Mai",
-    "lat": 18.7883,
-    "lng": 98.9853
+    "name": "สาขาที่ 1",
+    "latitude": 13.756331,
+    "longitude": 100.501762
   },
   {
-    "name": "Khon Kaen",
-    "lat": 16.4419,
-    "lng": 102.835
+    "name": "สาขาที่ 2",
+    "latitude": 13.766331,
+    "longitude": 100.521762
   },
   {
-    "name": "Surat Thani",
-    "lat": 9.1342,
-    "lng": 99.3335
+    "name": "สาขาที่ 3",
+    "latitude": 13.752541,
+    "longitude": 100.493922
   }
 ]
