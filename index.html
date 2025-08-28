@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Company Offices</title>
+  <style>#map { height: 100vh; width: 100%; }</style>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+  <script>
+    function initMap() {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 6,
+        center: { lat: 15.8700, lng: 100.9925 }
+      });
+
+      const offices = [{"name": "Bangkok", "lat": 13.7563, "lng": 100.5018}, {"name": "Chiang Mai", "lat": 18.7883, "lng": 98.9853}, {"name": "Khon Kaen", "lat": 16.4419, "lng": 102.835}, {"name": "Surat Thani", "lat": 9.1342, "lng": 99.3335}];
+
+      offices.forEach(o => {
+        const marker = new google.maps.Marker({
+          position: { lat: o.lat, lng: o.lng },
+          map,
+          title: o.name
+        });
+
+        const infowindow = new google.maps.InfoWindow({
+          content: `<b>${o.name}</b>`
+        });
+
+        marker.addListener('click', () => infowindow.open(map, marker));
+      });
+    }
+  </script>
+</head>
+<body onload="initMap()">
+  <h2>Company Offices</h2>
+  <div id="map"></div>
+</body>
+</html>
