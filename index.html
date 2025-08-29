@@ -49,11 +49,13 @@
           const marker = new google.maps.Marker({
             position: { lat: loc.Latitude, lng: loc.Longitude },
             map,
-            title: loc.Name
+            // รับค่าจาก name
+            title: loc.name
           });
 
           const info = new google.maps.InfoWindow({
-            content: `<b>${loc.Name}</b><br>ผู้รับผิดชอบ: ${loc.Admin || "-"}`
+            // แสดงค่าจาก name, info, และ admin ใน Info Window
+            content: `<b>${loc.name}</b><br>ข้อมูลเพิ่มเติม: ${loc.info || "-"}<br>ผู้รับผิดชอบ: ${loc.admin || "-"}`
           });
 
           marker.addListener("click", () => {
@@ -73,7 +75,6 @@
     }
   </script>
 
-  <!-- 👉 เปลี่ยนเป็น API Key ของคุณเอง -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap"></script>
 </body>
 </html>
