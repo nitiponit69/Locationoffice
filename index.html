@@ -47,7 +47,7 @@
 
         locations.forEach(loc => {
           const marker = new google.maps.Marker({
-            position: { lat: loc.Latitude, lng: loc.Longitude },
+            position: { lat: loc.lat, lng: loc.lng },
             map,
             // รับค่าจาก name
             title: loc.name
