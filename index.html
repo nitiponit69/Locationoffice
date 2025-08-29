@@ -26,7 +26,6 @@
   <script>
     async function initMap() {
       try {
-        // 👉 เปลี่ยน URL ให้ตรงกับ GitHub Pages ของคุณ
         const response = await fetch("https://nitiponit69.github.io/Locationoffice/data.json");
         if (!response.ok) throw new Error("โหลด data.json ไม่ได้");
         
@@ -37,10 +36,10 @@
           return;
         }
 
-        // กำหนดค่าเริ่มต้นจากจุดแรก
+        // ✅ ใช้ lat/lng (ไม่ใช่ Latitude/Longitude)
         const map = new google.maps.Map(document.getElementById("map"), {
           zoom: 6,
-          center: { lat: locations[0].Latitude, lng: locations[0].Longitude }
+          center: { lat: locations[0].lat, lng: locations[0].lng }
         });
 
         const bounds = new google.maps.LatLngBounds();
@@ -49,12 +48,10 @@
           const marker = new google.maps.Marker({
             position: { lat: loc.lat, lng: loc.lng },
             map,
-            // รับค่าจาก name
             title: loc.name
           });
 
           const info = new google.maps.InfoWindow({
-            // แสดงค่าจาก name, info, และ admin ใน Info Window
             content: `<b>${loc.name}</b><br>ข้อมูลเพิ่มเติม: ${loc.info || "-"}<br>ผู้รับผิดชอบ: ${loc.admin || "-"}`
           });
 
