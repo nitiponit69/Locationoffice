@@ -1,41 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>Company Offices</title>
-  <style>#map { height: 100vh; width: 100%; }</style>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7"></script>
+  <meta charset="UTF-8">
+  <title>Office Locations Map</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+    .gm-style-iw {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
   <script>
     async function initMap() {
-      // Step 1: Initialize the map
-      const map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 6,
-        center: { lat: 15.8700, lng: 100.9925 }
-      });
+      try {
+        const response = await fetch("https://nitiponit69.github.io/Locationoffice/data.json");
+        if (!response.ok) throw new Error("โหลด data.json ไม่ได้");
+        
+        const locations = await response.json();
 
-      // Step 2: Fetch data from the data.json file
-      const response = await fetch("data.json");
-      const offices = await response.json();
+        if (locations.length === 0) {
+          alert("ไม่มีข้อมูลใน data.json");
+          return;
+        }
 
-      // Step 3: Add markers for each office from the fetched data
-      offices.forEach(o => {
-        const marker = new google.maps.Marker({
-          position: { lat: o.lat, lng: o.lng },
-          map,
-          title: o.name
+        // ✅ ใช้ lat/lng (ไม่ใช่ Latitude/Longitude)
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: { lat: locations[0].lat, lng: locations[0].lng }
         });
 
-        const infowindow = new google.maps.InfoWindow({
-          content: `<b>${o.name}</b>`
+        const bounds = new google.maps.LatLngBounds();
+
+        locations.forEach(loc => {
+          const marker = new google.maps.Marker({
+            position: { lat: loc.lat, lng: loc.lng },
+            map,
+            title: loc.name
+          });
+
+          const info = new google.maps.InfoWindow({
+            content: `<b>${loc.name}</b><br>ข้อมูลเพิ่มเติม: ${loc.info || "-"}<br>ผู้รับผิดชอบ: ${loc.admin || "-"}`
+          });
+
+          marker.addListener("click", () => {
+            info.open(map, marker);
+          });
+
+          bounds.extend(marker.position);
         });
 
-        marker.addListener('click', () => infowindow.open(map, marker));
-      });
+        // ปรับ map ให้พอดีกับ marker ทั้งหมด
+        map.fitBounds(bounds);
+
+      } catch (err) {
+        console.error(err);
+        document.body.innerHTML = "<h2 style='color:red;text-align:center;'>❌ โหลดแผนที่ไม่ได้ ตรวจสอบ data.json หรือ API Key</h2>";
+      }
     }
   </script>
-</head>
-<body onload="initMap()">
-  <h2>Company Offices</h2>
-  <div id="map"></div>
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEok84ylOVMh6c30ef4pZc-IzxBAbDz7w&callback=initMap"></script>
 </body>
 </html>
